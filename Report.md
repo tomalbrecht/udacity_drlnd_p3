@@ -67,7 +67,7 @@ WEIGHT_DECAY = 1e-9     # L2 weight decay
 MU = 0.         # mean reversion level
 THETA = 0.05    # mean reversion speed oder mean reversion rate
 SIGMA = 0.02    # random factor influence
-source: https://de.wikipedia.org/wiki/Ornstein-Uhlenbeck-Prozess
+source: [`Wikipedia`](https://de.wikipedia.org/wiki/Ornstein-Uhlenbeck-Prozess)
 
 N_TIME_STEPS = 2  # only learn every n time steps
 
