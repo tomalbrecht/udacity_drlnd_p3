@@ -4,7 +4,7 @@ This project is based on my former project [`Continuous Contorl`](https://github
 
 I chose the DDPG (Deep Deterministic Policy Gradients) algorithm because it is able to handle continuous spaces, which is needed for this environment and seemed easier as discretization (see Chapter 1 of the course). Continuous spaces make it more difficult to train an agent, because the action space gets highly dimensional. In contrast DQN (with Q-tables)solves problems with high-dimensional observation spaces, but it can only handle discrete and low-dimensional action spaces. Using a neural network to approximate these values in a convinient way.
 
-The algorithm also benefits from two separate neural network (actor and critic) - so the target network will only be updated with every second training step (see hyperparameters for details).
+The algorithm also benefits from two separate neural network (actor and critic) - so the target network will only be updated with every second training step (see hyperparameters for details). 
 
 For more details see [`Continuous Control with Deep Reinforcement Learning`](https://arxiv.org/pdf/1509.02971.pdf)
 
@@ -56,10 +56,10 @@ The base function for `ddpg` was copied from my former project `udacity_drlnd_p2
 
 BUFFER_SIZE = int(1e6)  # replay buffer size
 BATCH_SIZE = 1024       # minibatch size
-GAMMA = 0.98            # discount factor
+GAMMA = 0.97            # discount factor
 TAU = 1e-3              # for soft update of target parameters
 LR_ACTOR = 1e-3         # learning rate of the actor 
-LR_CRITIC = 1e-4        # learning rate of the critic
+LR_CRITIC = 1e-3        # learning rate of the critic
 WEIGHT_DECAY = 1e-9     # L2 weight decay
 
 ### OU Noise
@@ -78,9 +78,19 @@ N_TIME_STEPS = 2  # only learn every n time steps
 
 ### Search method for Hyper Parameters
 
-First I started with the same values as from my former project - there seemed no learning at all. So I played around with OUNoise. Reducing the parameters seemed to have a positive effect. But the learning was too slow, so I implemented some kind of learning boost (`N_LEARN_UPDATE`). Setting this parameter around 5-6 had an positive effect to learning. Setting it to 12 and above had a negative effect and no learning took place anymore.
-Raisind the learning rate of the networks `LR_ACTOR` and `LR_CRITIC`had an negative effekt, so I reduced the learning rate below the default value. Because the LR seemed verly low, I reduced the weight\_decay corresponding to the learning rates as well.
-The learning startet, but it stalled around 800 episodes. I disabled `weight_decay` and reduced the `batch_size` to 512 to see if this will change anything.
+First I started with the same values as from my former project - there seemed no learning at all. So I played around with OUNoise (`MU`,`THETA`, `SIGMA`). Reducing the parameters seemed to have a positive effect. After a few empirical tests, I could not get any further improvement.
+
+But the learning was too slow, so I implemented some kind of learning boost (`N_LEARN_UPDATE`). Setting this parameter between 5 and 6 had an positive effect to learning. Setting it to 12 and above had a negative effect and no learning took place anymore. Setting `n_time_steps` to 6 had a negative effect, so I left the parameter untouched at 2.
+
+Raising the learning rate of the networks `LR_ACTOR` and `LR_CRITIC`had an negative effekt, so I reduced the learning rate below the default value. Because the LR seemed verly low, I reduced the `weight_decay` corresponding to the learning rates as well.
+The learning startet, but it stalled around 800 episodes. I finally disabled `weight_decay` completely
+
+After this I reduced the `batch_size` to 256, 512, 1024 and 2048. With higher values the learning slowed down extremely. I think this is because the neural network won't be able to train the outliers. So I reduced the batch size more and stopped at 256 because the learning stalled again. I kept 512.
+
+Then I tested a few parameters for the learn rates (`LR_ACTOR` and `LR_CRITIC`). I testet the following setup (1e-4/1e-5), (1e-3/1e-4) and (1e-3/1e-3). (1e-3/1e-3) looked promising, so I stopped.
+
+Setting `gamma` to 0.99 made the learning worse. So I tried reducing it to 0.95. This
+
 
 ## Performance plot
 

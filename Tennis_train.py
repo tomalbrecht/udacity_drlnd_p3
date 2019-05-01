@@ -8,8 +8,6 @@ import matplotlib.pyplot as plt
 from ddpg_agent import Agent
 import os
 
-%matplotlib inline
-
 env = UnityEnvironment(file_name="./Tennis_Linux_NoVis/Tennis.x86_64")
 
 # get the default brain
@@ -76,19 +74,19 @@ def ddpg(n_episodes=2000, max_t=700):
                             action_size, 
                             random_seed=0,
                             buffer_size=int(1e6),  # replay buffer size (default: int(1e6))
-                            batch_size=512,       # minibatch size (default: 128)
+                            batch_size=1024,       # minibatch size (default: 128)
                             gamma=0.98,            # discount factor (default: 0.99)
                             tau=1e-3,              # for soft update of target parameters (default: 1e-3)
-                            lr_actor=1e-4,         # learning rate of the actor (default: 1e-3)
-                            lr_critic=1e-5,        # learning rate of the critic (default: 1e-4)
+                            lr_actor=1e-3,         # learning rate of the actor (default: 1e-3)
+                            lr_critic=1e-3,        # learning rate of the critic (default: 1e-4)
                             weight_decay=0.,     # L2 weight decay (default: 3e-4)
                             mu=0.,                 # mean reversion level (default: 0.)
                             #theta=0.0000015,        # mean reversion speed oder mean reversion rate (default: 0.15)
                             #sigma=0.0002,           # random factor influence (sigma: 0.2)
                             theta=0.00015,         # mean reversion speed oder mean reversion rate (default: 0.15)
                             sigma=0.0002,           # random factor influence (sigma: 0.2)
-                            n_time_steps=2,         # only learn every n time steps
-                            n_learn_updates=5       # when learning, boost the learning n times
+                            n_time_steps=2,         # 2 only learn every n time steps
+                            n_learn_updates=6       # 5 when learning, boost the learning n times
                             )
                        )
 
