@@ -6,6 +6,9 @@ import torch
 from collections import deque
 import matplotlib.pyplot as plt
 from ddpg_agent import Agent
+import os
+
+%matplotlib inline
 
 env = UnityEnvironment(file_name="./Tennis_Linux_NoVis/Tennis.x86_64")
 
@@ -16,7 +19,7 @@ brain = env.brains[brain_name]
 # reset the environment
 env_info = env.reset(train_mode=True)[brain_name]
 
-# number of agents
+# number of agents 
 num_agents = len(env_info.agents)
 print('Number of agents:', num_agents)
 
@@ -30,10 +33,27 @@ state_size = states.shape[1]
 print('There are {} agents. Each observes a state with length: {}'.format(states.shape[0], state_size))
 print('The state for the first agent looks like:', states[0])
 
+def plot_scores(plot_name, scores):
+    """ Helper function to plot scores
+    Params
+    ======
+        plot_name (str): name of the plot/figure
+        scores: list of scores to plot
+    """
+    import os
+    if os.path.exists(plot_name):
+        os.remove(plot_name)
+    fig = plt.figure()
+    #ax = fig.add_subplot(111)
+    plt.plot(np.arange(len(scores)), scores)
+    plt.ylabel('Score')
+    plt.xlabel('Episode #')
+    plt.savefig(plot_name)
+    #plt.show()
+
 def ddpg(n_episodes=2000, max_t=700):
     """ Deep Deterministic Policy Gradients Methods
-    source: partially from https://github.com/udacity/deep-reinforcement-learning/tree/master/ddpg-bipedal
-    source: partially from my 1st project in this drlnd
+    partially from my 2st project in this drlnd
 
     Params
     ======
@@ -56,13 +76,19 @@ def ddpg(n_episodes=2000, max_t=700):
                             action_size, 
                             random_seed=0,
                             buffer_size=int(1e6),  # replay buffer size (default: int(1e6))
-                            batch_size=1024,       # minibatch size (default: 128)
+                            batch_size=512,       # minibatch size (default: 128)
                             gamma=0.98,            # discount factor (default: 0.99)
                             tau=1e-3,              # for soft update of target parameters (default: 1e-3)
-                            lr_actor=1e-3,         # learning rate of the actor (default: 1e-3)
-                            lr_critic=1e-4,        # learning rate of the critic (default: 1e-4)
-                            #weight_decay=0.       # L2 weight decay (default: 3e-4)
-                            weight_decay=1e-9      # L2 weight decay (default: 3e-4)
+                            lr_actor=1e-4,         # learning rate of the actor (default: 1e-3)
+                            lr_critic=1e-5,        # learning rate of the critic (default: 1e-4)
+                            weight_decay=0.,     # L2 weight decay (default: 3e-4)
+                            mu=0.,                 # mean reversion level (default: 0.)
+                            #theta=0.0000015,        # mean reversion speed oder mean reversion rate (default: 0.15)
+                            #sigma=0.0002,           # random factor influence (sigma: 0.2)
+                            theta=0.00015,         # mean reversion speed oder mean reversion rate (default: 0.15)
+                            sigma=0.0002,           # random factor influence (sigma: 0.2)
+                            n_time_steps=2,         # only learn every n time steps
+                            n_learn_updates=5       # when learning, boost the learning n times
                             )
                        )
 
@@ -101,19 +127,17 @@ def ddpg(n_episodes=2000, max_t=700):
         
         print('\nEpisode {}\tAverage Score: {:.2f}\tScore: {:.2f}'.format(i_episode, np.mean(scores_window), score), end="")
         
-        if np.mean(scores_window) >= 30.0 and i_episode > 99:
+        #save
+        if i_episode % 100 == 0:
+            plot_scores('training_plot.png', scores_episodes)
+        
+        if np.mean(scores_window) >= 0.5 and i_episode > 99:
+            plot_scores('results_plot.png', scores_episodes)
             print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(i_episode-100, np.mean(scores_window)))
             torch.save(Agent.actor_local.state_dict(), 'checkpoint_actor.pth')
             torch.save(Agent.critic_local.state_dict(), 'checkpoint_critic.pth')
             break
             
-    return scores
+    return scores_episodes
 
 scores = ddpg(n_episodes=2000, max_t=1000)
-
-fig = plt.figure()
-plt.plot(np.arange(len(scores)), scores)
-plt.ylabel('Score')
-plt.xlabel('Episode #')
-plt.savefig('results_plot.png')
-plt.show()
