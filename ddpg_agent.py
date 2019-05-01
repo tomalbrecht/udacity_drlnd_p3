@@ -9,11 +9,11 @@ import torch
 import torch.nn.functional as F
 import torch.optim as optim
 
-MU = 0.           # mean reversion level (default: 0.)
-THETA = 0.05      # mean reversion speed oder mean reversion rate (default: 0.15) --> TODO: 0.05
-SIGMA = 0.02      # random factor influence (sigma: 0.2) --> TODO: 0.02
+#MU = 0.           # mean reversion level (default: 0.)
+#THETA = 0.05      # mean reversion speed oder mean reversion rate (default: 0.15) --> TODO: 0.05
+#SIGMA = 0.02      # random factor influence (sigma: 0.2) --> TODO: 0.02
 
-N_TIME_STEPS = 2  # only learn every n time steps
+#N_TIME_STEPS = 2  # only learn every n time steps
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -41,7 +41,12 @@ class Agent():
                  tau=1e-3,              # for soft update of target parameters
                  lr_actor=1e-4,         # learning rate of the actor 
                  lr_critic=1e-3,        # learning rate of the critic
-                 weight_decay=0.0001    # L2 weight decay
+                 weight_decay=0.0001,   # L2 weight decay
+                 mu=0.,                 # mean reversion level (default: 0.)
+                 theta=0.15,            # mean reversion speed oder mean reversion rate (default: 0.15)
+                 sigma=0.2,             # random factor influence (sigma: 0.2)
+                 n_time_steps=2,        # only learn every n time steps
+                 n_learn_updates=5      # when learning, boost the learning n times
                 ):
         """Initialize an Agent object.
         
@@ -54,13 +59,15 @@ class Agent():
         self.state_size = state_size
         self.action_size = action_size
         self.seed = random.seed(random_seed)
-        self.buffer_size = buffer_size       # replay buffer size
-        self.batch_size = batch_size         # minibatch size
-        self.gamma = gamma                   # discount factor
-        self.tau = tau                       # for soft update of target parameters
-        self.lr_actor = lr_actor             # learning rate of the actor 
-        self.lr_critic = lr_critic           # learning rate of the critic
-        self.weight_decay = weight_decay     # L2 weight decay
+        self.buffer_size = buffer_size       #   replay buffer size
+        self.batch_size = batch_size            # minibatch size
+        self.gamma = gamma                      # discount factor
+        self.tau = tau                          # for soft update of target parameters
+        self.lr_actor = lr_actor                # learning rate of the actor 
+        self.lr_critic = lr_critic              # learning rate of the critic
+        self.weight_decay = weight_decay        # L2 weight decay
+        self.n_time_steps = n_time_steps        # only learn every n time steps
+        self.n_learn_updates = n_learn_updates  # when learning, boost the learning n times
 
         # initialization for first class instance
         if Agent.actor_local is None:
@@ -89,7 +96,7 @@ class Agent():
         self.critic_optimizer = Agent.critic_optimizer
 
         # Noise process
-        self.noise = OUNoise(action_size, random_seed, mu=MU, theta=THETA, sigma=SIGMA)
+        self.noise = OUNoise(action_size, random_seed, mu=mu, theta=theta, sigma=sigma)
         #TODO: Maybe self.noise = OUNoise((20, action_size), random_seed)
 
         # Replay memory
@@ -102,11 +109,12 @@ class Agent():
         Agent.memory.add(state, action, reward, next_state, done)
 
         # only learn every n_time_steps
-        if time_step % N_TIME_STEPS == 0:
+        if time_step % self.n_time_steps == 0:
             # Learn, if enough samples are available in memory
             if len(Agent.memory) > self.batch_size:
-                experiences = Agent.memory.sample()
-                self.learn(experiences, self.gamma)
+                for i in range(self.n_learn_updates):
+                    experiences = Agent.memory.sample()
+                    self.learn(experiences, self.gamma)
 
     def act(self, state, add_noise=True):
         """Returns actions for given state as per current policy."""

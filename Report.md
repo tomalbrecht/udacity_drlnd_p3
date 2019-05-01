@@ -78,7 +78,8 @@ N_TIME_STEPS = 2  # only learn every n time steps
 
 ### Search method for Hyper Parameters
 
-TODO
+First I started with the same values as from my former project - there seemed no learning at all. So I played around with OUNoise. Reducing the parameters seemed to have a positive effect. But the learning was too slow, so I implemented some kind of learning boost (`N_LEARN_UPDATE`). Setting this parameter around 5-6 had an positive effect to learning. Setting it to 12 and above had a negative effect and no learning took place anymore.
+Raisind the learning rate of the networks `LR_ACTOR` and `LR_CRITIC`had an negative effekt, so I reduced the learning rate below the default value. Because the LR seemed verly low, I reduced the weight\_decay corresponding to the learning rates as well.
 
 ## Performance plot
 
