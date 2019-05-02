@@ -1,3 +1,6 @@
+""" start with python Tennis_train.py | tee logfile.txt
+"""
+
 from unityagents import UnityEnvironment
 import numpy as np
 #import pandas as pd
@@ -77,8 +80,8 @@ def ddpg(n_episodes=2000, max_t=700):
                             batch_size=1024,       # minibatch size (default: 128)
                             gamma=0.98,            # discount factor (default: 0.99)
                             tau=1e-3,              # for soft update of target parameters (default: 1e-3)
-                            lr_actor=1e-3,         # learning rate of the actor (default: 1e-3)
-                            lr_critic=1e-3,        # learning rate of the critic (default: 1e-4)
+                            lr_actor=1e-4,         # learning rate of the actor (default: 1e-3)
+                            lr_critic=1e-5,        # learning rate of the critic (default: 1e-4)
                             weight_decay=0.,     # L2 weight decay (default: 3e-4)
                             mu=0.,                 # mean reversion level (default: 0.)
                             #theta=0.0000015,        # mean reversion speed oder mean reversion rate (default: 0.15)
@@ -132,10 +135,32 @@ def ddpg(n_episodes=2000, max_t=700):
         if np.mean(scores_window) >= 0.5 and i_episode > 99:
             plot_scores('results_plot.png', scores_episodes)
             print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(i_episode-100, np.mean(scores_window)))
-            torch.save(Agent.actor_local.state_dict(), 'checkpoint_actor.pth')
-            torch.save(Agent.critic_local.state_dict(), 'checkpoint_critic.pth')
-            break
+            torch.save(Agent.actor_local.state_dict(), 'checkpoint_actor_'+str(i_episode)+'.pth')
+            torch.save(Agent.critic_local.state_dict(), 'checkpoint_critic_'+str(i_episode)+'.pth')
+            if i_episode >=n_episodes:
+                break
             
     return scores_episodes
 
 scores = ddpg(n_episodes=2000, max_t=1000)
+
+# Detailed plotting
+
+import seaborn as sns
+sns.set(style="darkgrid")
+sns.set_palette("Set2")
+s = scores[:-4]
+from scipy.ndimage.filters import gaussian_filter1d
+ysmoothed2 = gaussian_filter1d(scores, sigma=42)
+ysmoothed3 = gaussian_filter1d(scores, sigma=64)
+
+fig = plt.figure(figsize=(11,11))
+ax = fig.add_subplot(111)
+plt.plot(np.arange(len(scores)), scores, linewidth=0.1)
+plt.plot(np.arange(len(scores)), ysmoothed3, linewidth=2.2)
+plt.plot(np.arange(len(scores)), ysmoothed2, linewidth=0.9)
+
+plt.ylabel('Score')
+plt.xlabel('Episode #')
+plt.savefig('detailed_plot.png')
+#plt.show()

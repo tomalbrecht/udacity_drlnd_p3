@@ -54,22 +54,23 @@ The base function for `ddpg` was copied from my former project `udacity_drlnd_p2
 
 ### Agent
 
-BUFFER_SIZE = int(1e6)  # replay buffer size
-BATCH_SIZE = 1024       # minibatch size
-GAMMA = 0.97            # discount factor
-TAU = 1e-3              # for soft update of target parameters
-LR_ACTOR = 1e-3         # learning rate of the actor 
-LR_CRITIC = 1e-3        # learning rate of the critic
-WEIGHT_DECAY = 1e-9     # L2 weight decay
+buffer_size=int(1e6)   # replay buffer size (default: int(1e6))
+batch_size=1024        # minibatch size (default: 128)
+gamma=0.98             # discount factor (default: 0.99)
+tau=1e-3               # for soft update of target parameters (default: 1e-3)
+lr_actor=1e-4          # learning rate of the actor (default: 1e-3)
+lr_critic=1e-5         # learning rate of the critic (default: 1e-4)
+weight_decay=0.        # L2 weight decay (default: 3e-4)
+n_time_steps=2         # 2 only learn every n time steps
+n_learn_updates=6      # 5 when learning, boost the learning n times
+
 
 ### OU Noise
 
-MU = 0.         # mean reversion level
-THETA = 0.05    # mean reversion speed oder mean reversion rate
-SIGMA = 0.02    # random factor influence
+mu=0.                 # mean reversion level (default: 0.)
+theta=0.00015         # mean reversion speed oder mean reversion rate (default: 0.15)
+sigma=0.0002          # random factor influence (sigma: 0.2)
 source: [`Wikipedia`](https://de.wikipedia.org/wiki/Ornstein-Uhlenbeck-Prozess)
-
-N_TIME_STEPS = 2  # only learn every n time steps
 
 ### NN Model
 
@@ -89,7 +90,9 @@ After this I reduced the `batch_size` to 256, 512, 1024 and 2048. With higher va
 
 Then I tested a few parameters for the learn rates (`LR_ACTOR` and `LR_CRITIC`). I testet the following setup (1e-4/1e-5), (1e-3/1e-4) and (1e-3/1e-3). (1e-3/1e-3) looked promising, so I stopped.
 
-Setting `gamma` to 0.99 made the learning worse. So I tried reducing it to 0.95. This
+Setting `gamma` to 0.99 made the learning worse. So I tried reducing it to 0.95. Finally gamma 0.98 seemed to work well for me.
+
+I've included a few (not all of them) plots into `./figures/`
 
 
 ## Performance plot
@@ -111,5 +114,7 @@ Environment solved in 0 episodes!	Average Score: 35.94
 ```
 
 ## Ideas for Future Work
-* 
-* Check Rainbow and PO algorithms [Rainbow: Combining Improvements in Deep Reinforcement Learning](https://arxiv.org/pdf/1710.02298.pdf)
+* Reduce the layers of the critic network to see if it will learn faster (and still be stable in training)
+* Implement a grid search algorithm to find better combinations of hyper parameters
+* CPU and GPU usage is around 30% - find a way to utilize 100% of the hardware
+* Use [`Stable Baselines`](https://github.com/hill-a/stable-baselines) based on OpenAI to compare different algorithms
