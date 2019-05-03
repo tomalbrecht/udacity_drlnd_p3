@@ -6,6 +6,8 @@ I chose the DDPG (Deep Deterministic Policy Gradients) algorithm because it is a
 
 The algorithm also benefits from two separate neural network (actor and critic) - so the target network will only be updated with every second training step (see hyperparameters for details). 
 
+For this training I extended the agent with `n_time_steps=2`, so the target network will update every n steps. To boost the learning at this update stept, I implemented n_learn_updates, to learn multiple times from the current local network.
+
 For more details see [`Continuous Control with Deep Reinforcement Learning`](https://arxiv.org/pdf/1509.02971.pdf)
 
 ## State and Action Space
@@ -92,7 +94,7 @@ Then I tested a few parameters for the learn rates (`LR_ACTOR` and `LR_CRITIC`).
 
 Setting `gamma` to 0.99 made the learning worse. So I tried reducing it to 0.95. Finally gamma 0.98 seemed to work well for me.
 
-I've included a few (not all of them) plots into `./figures/`
+I've included a few (not all of them) plots into `./figures/`. For later manual testing, I've inluded model weights from different episodes. I want to manually compare them.
 
 
 ## Performance plot

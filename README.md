@@ -1,5 +1,36 @@
 # Project 3: Collaboration and Competition
 
+## Project Details
+
+This project is based on my former project [`Continuous Contorl`](https://github.com/tomalbrecht/udacity_drlnd_p2) from this drlnd course. I used this as base project, because I already implemented the code to run multiple agents.
+
+I chose the DDPG (Deep Deterministic Policy Gradients) algorithm because it is able to handle continuous spaces, which is needed for this environment and seemed easier as discretization (see Chapter 1 of the course). Continuous spaces make it more difficult to train an agent, because the action space gets highly dimensional. In contrast DQN (with Q-tables)solves problems with high-dimensional observation spaces, but it can only handle discrete and low-dimensional action spaces. Using a neural network to approximate these values in a convinient way.
+
+The algorithm also benefits from two separate neural network (actor and critic) - so the target network will only be updated with every second training step (see hyperparameters for details). 
+
+## State and Action Space
+
+This project uses an adapted [`tennis environment`](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis) from unity.
+
+In this environment, two agents control rackets to bounce a ball over a net. If an agent hits the ball over the net, it receives a reward of +0.1. If an agent lets a ball hit the ground or hits the ball out of bounds, it receives a reward of -0.01. Thus, the goal of each agent is to keep the ball in play.
+
+The observation space consists of 8 variables corresponding to the position and velocity of the ball and racket. Each agent receives its own, local observation. Two continuous actions are available, corresponding to movement toward (or away from) the net, and jumping.
+
+The task is episodic, and in order to solve the environment, your agents must get an average score of +0.5 (over 100 consecutive episodes, after taking the maximum over both agents). Specifically,
+
+* Set-up: Two-player game where agents control rackets to bounce ball over a net.
+* Goal: The agents must bounce ball between one another while not dropping or sending ball out of bounds.
+* Agents: The environment contains two agent linked to a single Brain named TennisBrain. After training you can attach another Brain named MyBrain to one of the agent to play against your trained model.
+* Agent Reward Function (independent):
+    * +0.1 To agent when hitting ball over net.
+    * -0.1 To agent who let ball hit their ground, or hit ball out of bounds.
+* Brains: One Brain with the following observation/action space.
+* Vector Observation space: 8 variables corresponding to position and velocity of ball and racket.
+* Vector Action space: (Continuous) Size of 2, corresponding to movement toward net or away from net, and jumping.
+* Visual Observations: None.
+* Reset Parameters: One, corresponding to size of ball.
+* Benchmark Mean Reward: 2.5
+
 ## Getting Started
 
 ### Step 1: Activate the Environment
