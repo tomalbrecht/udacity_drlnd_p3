@@ -2,7 +2,7 @@
 
 ## Project Details
 
-This project is based on my former project [`Continuous Contorl`](https://github.com/tomalbrecht/udacity_drlnd_p2) from this drlnd course. I used this as base project, because I already implemented the code to run multiple agents.
+This project is based on my former project [`Continuous Control`](https://github.com/tomalbrecht/udacity_drlnd_p2) from this drlnd course. I used this as base project, because I already implemented the code to run multiple agents.
 
 I chose the DDPG (Deep Deterministic Policy Gradients) algorithm because it is able to handle continuous spaces, which is needed for this environment and seemed easier as discretization (see Chapter 1 of the course). Continuous spaces make it more difficult to train an agent, because the action space gets highly dimensional. In contrast DQN (with Q-tables)solves problems with high-dimensional observation spaces, but it can only handle discrete and low-dimensional action spaces. Using a neural network to approximate these values in a convinient way.
 
