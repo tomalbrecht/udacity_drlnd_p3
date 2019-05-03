@@ -100,17 +100,30 @@ I've included a few (not all of them) plots into `./figures/`
 See: `results_plot.png` included in this repository.
 
 ```
-Episode 1	    Timestep 999	Score: 0.45	    min: 0.00	    max: 1.38
-Episode 2	    Timestep 999	Score: 1.61	    min: 0.83	    max: 3.08
-Episode 3       Timestep 999    Score: 4.88     min: 1.34       max: 9.10 
-Episode 4       Timestep 999    Score: 13.64    min: 4.85       max: 25.60
-Episode 5       Timestep 999    Score: 24.77    min: 16.52      max: 35.08
-Episode 6       Timestep 999    Score: 31.76    min: 23.56      max: 35.89
 ...
-Episode 100	    Timestep 999	Score: 35.46	min: 26.03	max: 39.52
-Episode 100	    Average Score: 35.94	Score: 35.46
-
-Environment solved in 0 episodes!	Average Score: 35.94
+Episode 1349	Timestep 361	Score: 0.90	min: 0.90	max: 0.90
+Episode 1349	Timestep 362	Score: 0.90	min: 0.90	max: 0.90
+Episode 1349	Timestep 363	Score: 0.90	min: 0.90	max: 0.90
+Episode 1349	Timestep 364	Score: 0.90	min: 0.90	max: 0.90
+Episode 1349	Timestep 365	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 366	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 367	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 368	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 369	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 371	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 372	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 373	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 374	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 375	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 376	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 377	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 378	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 379	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 381	Score: 0.95	min: 0.90	max: 1.00
+Episode 1349	Timestep 382	Score: 0.95	min: 0.89	max: 1.00
+Episode 1349	Average Score: 0.50	Score: 0.95
+Environment solved in 1249 episodes!	Average Score: 0.50
+...
 ```
 
 ## Ideas for Future Work
@@ -118,3 +131,4 @@ Environment solved in 0 episodes!	Average Score: 35.94
 * Implement a grid search algorithm to find better combinations of hyper parameters
 * CPU and GPU usage is around 30% - find a way to utilize 100% of the hardware
 * Use [`Stable Baselines`](https://github.com/hill-a/stable-baselines) based on OpenAI to compare different algorithms
+* check the saved models in `models` in real play, to see if there is a difference (overfitting)?
